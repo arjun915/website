@@ -1,0 +1,58 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin: auto; padding: 20px;">
+    <div class="question-box" style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 8px rgba(0,0,0,0.1);">
+        <h2>{{ question.title }}</h2>
+        <p>{{ question.content }}</p>
+        <p style="font-style: italic;">Posted by: {{ question.user.username }}</p>
+    </div>
+
+    <div class="answers" style="margin-top: 30px;">
+        <h3>Answers</h3>
+        <ul style="list-style-type: none; padding-left: 0;">
+            {% for ans in answers %}
+                <li style="background: #fff; margin-top: 15px; padding: 15px; border-radius: 8px; box-shadow: 0px 0px 5px rgba(0,0,0,0.05);">
+                    <p>{{ ans.content }}</p>
+                    <p style="font-size: 0.9em; color: #666;">— {{ ans.user.username }}</p>
+                    <form method="post" action="{% url 'like_answer' ans.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="padding: 5px 10px; background: #e6e6e6; border: none; border-radius: 5px; cursor: pointer;">
+                            {% if user in ans.likes.all %}
+                                ❤️ Unlike ({{ ans.likes.count }})
+                            {% else %}
+                                🤍 Like ({{ ans.likes.count }})
+                            {% endif %}
+                        </button>
+                    </form>
+                </li>
+            {% empty %}
+                <li>No answers yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="answer-form" style="margin-top: 30px; background: #f0f8ff; padding: 20px; border-radius: 10px; box-shadow: 0px 2px 8px rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom: 15px; font-size: 1.3em; color: #333;">Your Answer</h3>
+        <form method="post" style="display: flex; flex-direction: column; gap: 10px;">
+            {% csrf_token %}
+            <div style="display: flex; flex-direction: column;">
+                {{ form.content.label_tag }}
+                {{ form.content }}
+            </div>
+            <button type="submit" style="align-self: flex-start; padding: 8px 16px; background: #4CAF50; color: #fff; border: none; border-radius: 5px; font-weight: bold;">
+                Post Answer
+            </button>
+        </form>
+    </div>
+{% else %}
+    <p><a href="{% url 'login' %}">Login to answer</a></p>
+{% endif %}
+
+
+    <div style="margin-top: 30px;">
+        <a href="{% url 'home' %}" style="text-decoration: none; color: #007bff;">← Back to Home</a>
+    </div>
+</div>
+{% endblock %}

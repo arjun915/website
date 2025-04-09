@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Ask a Question{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 600px;">
+    <h2 class="mb-4 text-center">Ask a Question</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="id_title" class="form-label">Title</label>
+            {{ form.title }}
+        </div>
+        
+        <div class="mb-3">
+            <label for="id_content" class="form-label">Content</label>
+            {{ form.content }}
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Post Question</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="{% url 'home' %}" class="text-decoration-none">← Back to Home</a>
+    </div>
+</div>
+{% endblock %}

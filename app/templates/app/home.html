@@ -1,0 +1,22 @@
+<!-- templates/home.html -->
+{% extends 'app/base.html' %}
+
+{% block title %}Quora{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>All Questions</h2>
+    <a href="{% url 'ask_question' %}" class="btn btn-primary">Ask a Question</a>
+</div>
+
+<ul class="list-group">
+    {% for q in questions %}
+        <li class="list-group-item">
+            <a href="{% url 'question_detail' q.id %}" class="fw-bold">{{ q.title }}</a>
+            <div class="text-muted small">Posted by {{ q.user.username }} on {{ q.created_at|date:"M d, Y H:i" }}</div>
+        </li>
+    {% empty %}
+        <li class="list-group-item text-muted">No questions yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
